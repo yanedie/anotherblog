@@ -4696,13 +4696,13 @@
             class: "md-search-result__item"
         }, c)
     }
-    function Ho(e) {
-        return O("ul", {
-            class: "md-source__facts"
-        }, Object.entries(e).map(([t,r])=>O("li", {
-            class: `md-source__fact md-source__fact--${t}`
-        }, typeof r == "number" ? yr(r) : r)))
-    }
+    // function Ho(e) {
+    //     return O("ul", {
+    //         class: "md-source__facts"
+    //     }, Object.entries(e).map(([t,r])=>O("li", {
+    //         class: `md-source__fact md-source__fact--${t}`
+    //     }, typeof r == "number" ? yr(r) : r)))
+    // }
     function tn(e) {
         let t = `tabbed-control tabbed-control--${e}`;
         return O("div", {
@@ -5945,6 +5945,22 @@
         }
         )
     }
+    function vi(e, t) {
+        if (typeof t != "undefined") {
+            let r = `https://api.github.com/repos/${e}/${t}`;
+            return $t(Ye(`${r}/releases/latest`).pipe(ge(()=>x), u(n=>({
+                version: n.tag_name
+            })), Fe({})), Ye(r).pipe(ge(()=>x), u(n=>({
+                stars: n.stargazers_count,
+                forks: n.forks_count
+            })), Fe({}))).pipe(u(([n,o])=>j(j({}, n), o)))
+        } else {
+            let r = `https://api.github.com/users/${e}`;
+            return Ye(r).pipe(u(n=>({
+                repositories: n.public_repos
+            })), Fe({}))
+        }
+    }
     function gi(e, t) {
         let r = `https://${e}/api/v4/projects/${encodeURIComponent(t)}`;
         return Ye(r).pipe(ge(()=>x), u(({star_count: n, forks_count: o})=>({
@@ -5982,21 +5998,21 @@
             facts: t
         })), Z(1)))
     }
-    // function xi(e) {
-    //     let t = W(":scope > :last-child", e);
-    //     return P(()=>{
-    //         let r = new S;
-    //         return r.subscribe(({facts: n})=>{
-    //             t.appendChild(Ho(n)),
-    //             t.classList.add("md-source__repository--active")
-    //         }
-    //         ),
-    //         ws(e).pipe(w(n=>r.next(n)), C(()=>r.complete()), u(n=>j({
-    //             ref: e
-    //         }, n)))
-    //     }
-    //     )
-    // }
+    function xi(e) {
+        let t = W(":scope > :last-child", e);
+        return P(()=>{
+            let r = new S;
+            return r.subscribe(({facts: n})=>{
+                t.appendChild(Ho(n)),
+                t.classList.add("md-source__repository--active")
+            }
+            ),
+            ws(e).pipe(w(n=>r.next(n)), C(()=>r.complete()), u(n=>j({
+                ref: e
+            }, n)))
+        }
+        )
+    }
     function Ss(e, {viewport$: t, header$: r}) {
         return Le(document.body).pipe(g(()=>wr(e, {
             header$: r,
